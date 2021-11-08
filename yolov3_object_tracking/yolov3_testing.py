@@ -3,17 +3,13 @@ import numpy as np
 import argparse
 import time
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--play_video', help="Tue/False", default=False)
-parser.add_argument('--video_path', help="Path of video file", default=False)
-parser.add_argument('--verbose', help="To print statements", default=True)
-args = parser.parse_args()
+
 
 #Load yolo
-def load_yolo():
-    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+def load_yolo(weights, cfg, names):
+    net = cv2.dnn.readNet(weights, cfg)
     classes = []
-    with open("coco.names", "r") as f:
+    with open(names, "r") as f:
         classes = [line.strip() for line in f.readlines()]
     layers_names = net.getLayerNames()
     output_layers = [layers_names[i-1] for i in net.getUnconnectedOutLayers()]
@@ -87,6 +83,11 @@ def start_video(video_path):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--play_video', help="Tue/False", default=False)
+    parser.add_argument('--video_path', help="Path of video file", default=False)
+    parser.add_argument('--verbose', help="To print statements", default=True)
+    args = parser.parse_args()
     video_play = args.play_video
     if video_play:
         video_path = args.video_path
